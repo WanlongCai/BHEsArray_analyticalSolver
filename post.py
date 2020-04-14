@@ -11,7 +11,7 @@ def output_csv(BHE_num, timestep_tot,
     for i in range(1, BHE_num + 1):
         row_name.append('BHE' + str(i))
         
-    #Bohrhole wall soil temperature:
+    #Borehole wall soil temperature:
     col_name = []
     for i in range(0, timestep_tot + 1):
         col_name.append('Time at ' + str(i) + 'step [K]')

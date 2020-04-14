@@ -10,8 +10,8 @@ import csv
 plt.rcParams.update({'figure.max_open_warning': 0})
 
 #%% fig
-data_size = 501
-xaxial = np.arange(0,100,0.2)
+data_size = 3611
+xaxial = np.arange(0,3610,1)
 #plt.figure(figsize=(6, 4), dpi = 300)
 plt.figure()
    
@@ -23,7 +23,7 @@ plt.plot(xaxial,ana_rt_df_Tin.iloc[0,1:data_size]-273.15,c='g',lw=1,ls=':', mark
 plt.plot(xaxial,ana_rt_df_Tout.iloc[0,1:data_size]-273.15,c='y',lw=1,ls=':', marker='x',markersize=4,  label= 'ana_Tin')
 #    plt.grid(True, linestyle = "-.", color = "gray", linewidth = "0.5")
 #    plt.axhline(-5, c ='k',ls='--',lw=1, )
-plt.xlim([0,10])
+plt.xlim([0,722])
 plt.ylim([20,45])
 #plt.yticks(np.arange(7, 12, 0.5))
 #plt.xticks(np.arange(0,data_size,2),np.arange(0,191,20))

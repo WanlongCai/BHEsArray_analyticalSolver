@@ -19,7 +19,7 @@ import math
 # Email:  haibing(dot)shao(at)gmail(dot)com
 
 #main parameters
-time_tot = 100*60*60 #s
+time_tot = 722*60*60 #s
 delta_t = 720 #s
 timestep_tot = int(time_tot/delta_t)
 
@@ -66,12 +66,13 @@ v_pi = w / (math.pi / 4 * d_pi * d_pi)
 mu_f = 0.89e-3
 
 # Reynolds number
-# Re = rho_f * v_pi * d_pi / mu_f
-Re = 10000
+Re = rho_f * v_pi * d_pi / mu_f
+# Re = 10000
 
 # estimate film coefficients by the Gnielinski correlation
 k_f = 0.589  # unit W/m/K
-Pr = mu_f / rho_f / alpha_s
+# Pr = mu_f / rho_f / alpha_s
+Pr = 8.09
 # Churchill correlation for friction factor Eq.(B.4)
 f = 1 / (1 / ((8 / Re) ** 10 + (Re / 36500) ** 20) ** 0.5 + (2.21 * math.log(Re / 7)) ** 10) ** 0.2
 # Gnielinski correlation is used to estimate convective film coefficient Eq.(B.1)
@@ -100,7 +101,7 @@ N_12 = Len / (R_12 * w * c_f)
 # calculate resistance at grout/pipe interface
 R_w1 = 1 / (2 * math.pi * k_p) * math.log(d_po / d_pi) + 1 / (math.pi * d_pi * h_pi)
 
-R_b = 0.13  # unit m K/W
+R_b = 0.165  # unit m K/W
 # R_w1 = 0.0001 # case 1: neglect this Resistance term
 R_bmod = R_b - R_w1 / 2
 

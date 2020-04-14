@@ -15,7 +15,7 @@ import post
 
 #%% User setting
 #main parameters
-time_tot = 100*60*60 #s
+time_tot = 722*60*60 #s
 delta_t = 720 #s
 timestep_tot = int(time_tot/delta_t)
 

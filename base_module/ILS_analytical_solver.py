@@ -26,7 +26,7 @@ k_s = 2.82 #W/m*K
 alpha = k_s/(3.2e6) #m^2/s
 
 #time
-time_tot = 100*60*60 #s
+time_tot = 722*60*60 #s
 delta_t = 720 #s
 timestep_tot = int(time_tot/delta_t)
 
