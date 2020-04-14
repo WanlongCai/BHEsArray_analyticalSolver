@@ -66,12 +66,17 @@ v_pi = w / (math.pi / 4 * d_pi * d_pi)
 mu_f = 0.89e-3
 
 # Reynolds number
-# Re = rho_f * v_pi * d_pi / mu_f
-Re = 10000
+Re = rho_f * v_pi * d_pi / mu_f
+# =============================================================================
+# Re = 10000
+# =============================================================================
 
 # estimate film coefficients by the Gnielinski correlation
 k_f = 0.589  # unit W/m/K
-Pr = mu_f / rho_f / alpha_s
+# =============================================================================
+# Pr = mu_f / rho_f / alpha_s
+# =============================================================================
+Pr = 8.09
 # Churchill correlation for friction factor Eq.(B.4)
 f = 1 / (1 / ((8 / Re) ** 10 + (Re / 36500) ** 20) ** 0.5 + (2.21 * math.log(Re / 7)) ** 10) ** 0.2
 # Gnielinski correlation is used to estimate convective film coefficient Eq.(B.1)
@@ -100,7 +105,7 @@ N_12 = Len / (R_12 * w * c_f)
 # calculate resistance at grout/pipe interface
 R_w1 = 1 / (2 * math.pi * k_p) * math.log(d_po / d_pi) + 1 / (math.pi * d_pi * h_pi)
 
-R_b = 0.13  # unit m K/W
+R_b = 0.165  # unit m K/W
 # R_w1 = 0.0001 # case 1: neglect this Resistance term
 R_bmod = R_b - R_w1 / 2
 
@@ -140,31 +145,33 @@ z_D = 0.0
 
 # functions
 
-def result(N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, z_D, timeDstart):
-    # ns = 12
-    # ncycles = 5
-    # ndiv = 10
-    # # zero out the data space
-    # rt = np.zeros((ncycles * ndiv, 8))
-    # # start calculating result
-    # for i in range(ncycles):
-    #     for j in range(ndiv):
-    #         tval = timeD[j] * 10 ** (i)
-    #         k = i * ndiv + j
+def result(N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, z_D, timeD):
+    ns = 12
+    ncycles = 5
+    ndiv = 10
+    # zero out the data space
+    rt = np.zeros((ncycles * ndiv, 3))
+    # start calculating result
+    for i in range(ncycles):
+        for j in range(ndiv):
+            tval = timeD[j] * 10 ** (i)
+            k = i * ndiv + j
     #         rt[k, 0] = k
-    #         rt[k, 1] = tval
-    #         rt[k, 2] = Stehfest_inv_Lap(F_1, tval, N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, r_D, z_D, ns)
-    #         rt[k, 3] = Stehfest_inv_Lap(F_2, tval, N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, r_D, z_D, ns)
+            rt[k, 0] = tval
+            rt[k, 1] = Stehfest_inv_Lap(F_1, tval, N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, z_D, ns)
+            rt[k, 2] = Stehfest_inv_Lap(F_2, tval, N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, z_D, ns)
     #         rt[k, 4] = Stehfest_inv_Lap(FS_1, tval, N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, r_D, z_Dsand, ns)
     #         rt[k, 5] = Stehfest_inv_Lap(FG_1, tval, N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, r_Db, z_Dsand,ns)
     #         rt[k, 6] = Stehfest_inv_Lap(FS_2, tval, N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, r_D, z_Dsand, ns)
     #         rt[k, 7] = Stehfest_inv_Lap(FG_2, tval, N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, r_Db, z_Dsand,ns)
-    ns = 12
-    tval = timeDstart
-    rt = np.zeros((3))
-    rt[0] = tval # Fourier time
-    rt[1] = Stehfest_inv_Lap(F_1, tval, N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, z_D, ns) # inlet temperature at given time
-    rt[2] = Stehfest_inv_Lap(F_2, tval, N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, z_D, ns) # outlet temperature at given time
+# =============================================================================
+#     ns = 12
+#     tval = timeDstart
+#     rt = np.zeros((3))
+#     rt[0] = tval # Fourier time
+#     rt[1] = Stehfest_inv_Lap(F_1, tval, N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, z_D, ns) # inlet temperature at given time
+#     rt[2] = Stehfest_inv_Lap(F_2, tval, N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, z_D, ns) # outlet temperature at given time
+# =============================================================================
     return rt
 
 
@@ -397,24 +404,6 @@ def zresult(nz, N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, z_D, timeDsta
         rt[i,3] = Stehfest_inv_Lap(F_2, tval, N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, z_D, ns)  # outlet temperature at given time
     return rt
 
-# calculate fluid temperature distribution at the axial direction of borehole
-def Type_1U_BHE_tDist(Power, T_soil, nz, N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, z_D, timeDstart):
-    zRD = zresult(nz, N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, z_D, timeDstart)
-    # TD1 and TD2 are the dimensionless temperature
-    zD = zRD[:, 1]
-    zTD1 = zRD[:, 2]
-    zTD2 = zRD[:, 3]
-    H = np.zeros((nz))
-    T1z = np.zeros((nz))
-    T2z = np.zeros((nz))
-    # evaluate the fluid temperatures at the axial direction from correspnding dimensionless variables
-    for iz in range(nz):
-        H[iz] = Len * zD[iz]
-        T1z[iz] = Power * zTD1[iz] / (2 * math.pi * k_s * Len) + T_soil
-        T2z[iz] = Power * zTD2[iz] / (2 * math.pi * k_s * Len) + T_soil
-
-    return (H, T1z, T2z)
-
 # interface functions to main.py calculation procedure for the first timestep
 def Type_1U_BHE_cal_singel(Power, Tsoil, f_r):
     Tin = Power * global_coeff_Tin / (2 * math.pi * k_s * Len) + Tsoil
@@ -443,32 +432,52 @@ def Type_1U_BHE_cal(BHE_id, T_in, T_soil, f_r_cur, f_r_pre):
 
     return (Tout, Power)
 
-#%% main
+# calculate fluid temperature distribution at the axial direction of borehole
+def Type_1U_BHE_tDist(Power, T_soil, nz, N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, z_D, timeDstart):
+    zRD = zresult(nz, N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, z_D, timeDstart)
+    # TD1 and TD2 are the dimensionless temperature
+    zD = zRD[:, 1]
+    zTD1 = zRD[:, 2]
+    zTD2 = zRD[:, 3]
+    H = np.zeros((nz))
+    T1z = np.zeros((nz))
+    T2z = np.zeros((nz))
+    # evaluate the fluid temperatures at the axial direction from correspnding dimensionless variables
+    for iz in range(nz):
+        H[iz] = Len * zD[iz]
+        T1z[iz] = Power * zTD1[iz] / (2 * math.pi * k_s * Len) + T_soil
+        T2z[iz] = Power * zTD2[iz] / (2 * math.pi * k_s * Len) + T_soil
+
+    return (H, T1z, T2z)
+
+# main
 # calculate the dimensionless time tD1
-# ndiv = 10
-# ncycles = 5
-# timeDstart = 0.02
-# xincr = 1.0 / ndiv
-# iid = np.transpose([np.arange(ndiv + 1)])
-# expon_id = xincr * iid
-# timeDfirst = np.zeros((ndiv + 1, 1))
-# for i in range(ndiv + 1):
-#     timeDfirst[i] = 10 ** expon_id[i] * timeDstart
+ndiv = 10
+ncycles = 5
+timeDstart = 0.02
+xincr = 1.0 / ndiv
+iid = np.transpose([np.arange(ndiv + 1)])
+expon_id = xincr * iid
+timeDfirst = np.zeros((ndiv + 1, 1))
+for i in range(ndiv + 1):
+    timeDfirst[i] = 10 ** expon_id[i] * timeDstart
 # Fourier time at given time step
-timeDstart = (k_s*delta_t)/(c_s*r_eq**2)
+# =============================================================================
+# timeDstart = (k_s*delta_t)/(c_s*r_eq**2)
+# =============================================================================
 # calculate dimensionless temperature as a function of dimensionless time
 # TD1 = dimensionless temperature
 # DD1 = dimensionless temperature derivative
 # tD1 = dimensionless time (Fourier number)
 # RD = result(N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, r_Dsand, z_D, z_Dsand, timeDfirst)
-RD = result(N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, z_D, timeDstart)
+RD = result(N_s, N_w1, N_w2, N_12, H_g, H_f, kappa, A_D, r_Db, z_D, timeDfirst)
 # print(RD)
 # convert from dimensionless Temperature to the real temperature
 # TD1 and TD2 are the dimensionless temperature
-TD1 = RD[1]
-TD2 = RD[2]
+TD1 = RD[:,1]
+TD2 = RD[:,2]
 # tD1 is the dimensionless time
-tD1 = RD[0]
+tD1 = RD[:,0]
 # =============================================================================
 # TDS1 = RD[:, 4]
 # TGS1 = RD[:, 5]
@@ -479,13 +488,14 @@ tD1 = RD[0]
 T1 = Q0 * TD1 / (2 * math.pi * k_s * Len) + T_s
 T2 = Q0 * TD2 / (2 * math.pi * k_s * Len) + T_s
 # evaluate the inlet & outlet temperatures and power from correspnding dimensionless variables
-#t = (tD1 * c_s * (r_eq) ** 2 / k_s) * 3600  # this is in seconds
+t = (tD1 * c_s * (r_eq) ** 2 / k_s) # this is in seconds
 #T1 = Q0 * TD1 / (2 * math.pi * k_s * Len) + T_s
 #T2 = Q0 * TD2 / (2 * math.pi * k_s * Len) + T_s
 #Q =  ((2 * math.pi * k_s * Len)*(T_in - T_s))/TD1[0]
 #T_out = T_in - Q/(c_f*w)
 #print('For the given initial power', Q0, 'W, the inlet  temperature is', T1[0],'and outlet temperature is', T2[0])
 #print('For the given inlet temperature', T_in, ', the BHE power is', Q , 'W, the outlet temperature is ',T_out)
-#%% initialise TD1 and TD2 coefficient for inflow and outflow termperature of each BHEs
+# =============================================================================
+# initialise TD1 and TD2 coefficient for inflow and outflow termperature of each BHEs
 global_coeff_Tin = np.zeros(BHE_num) + TD1
 global_coeff_Tout= np.zeros(BHE_num) + TD2

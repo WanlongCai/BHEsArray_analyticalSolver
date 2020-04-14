@@ -30,20 +30,20 @@ fc_out = sink('from consumer outflow')
 
 pu = pump('pump')
 
-sp = splitter('splitter', num_out=3)
+sp = splitter('splitter', num_out=1)
 
 # bhe:
 bhe_name = 'BHE1'
 assert 'BHE1' in bhe_name, "BHE should be named with 'BHE1'"
 bhe1 = heat_exchanger_simple(bhe_name)
-bhe_name = 'BHE2'
-assert 'BHE2' in bhe_name, "BHE should be named with 'BHE2'"
-bhe2 = heat_exchanger_simple(bhe_name)
-bhe_name = 'BHE3'
-assert 'BHE3' in bhe_name, "BHE should be named with 'BHE3'"
-bhe3 = heat_exchanger_simple(bhe_name)
+# bhe_name = 'BHE2'
+# assert 'BHE2' in bhe_name, "BHE should be named with 'BHE2'"
+# bhe2 = heat_exchanger_simple(bhe_name)
+# bhe_name = 'BHE3'
+# assert 'BHE3' in bhe_name, "BHE should be named with 'BHE3'"
+# bhe3 = heat_exchanger_simple(bhe_name)
 
-mg = merge('merge', num_in=3)
+mg = merge('merge', num_in=1)
 
 cons = heat_exchanger_simple('consumer')
 
@@ -53,19 +53,20 @@ fc_pu = connection(fc_in, 'out1', pu, 'in1')
 pu_sp = connection(pu, 'out1', sp, 'in1')
 
 sp_bhe1 = connection(sp, 'out1', bhe1, 'in1')
-sp_bhe2 = connection(sp, 'out2', bhe2, 'in1')
-sp_bhe3 = connection(sp, 'out3', bhe3, 'in1')
+# sp_bhe2 = connection(sp, 'out2', bhe2, 'in1')
+# sp_bhe3 = connection(sp, 'out3', bhe3, 'in1')
 
 bhe1_mg = connection(bhe1, 'out1', mg, 'in1')
-bhe2_mg = connection(bhe2, 'out1', mg, 'in2')
-bhe3_mg = connection(bhe3, 'out1', mg, 'in3')
+# bhe2_mg = connection(bhe2, 'out1', mg, 'in2')
+# bhe3_mg = connection(bhe3, 'out1', mg, 'in3')
 
 mg_cons = connection(mg, 'out1', cons, 'in1')
 
 cons_fc = connection(cons, 'out1', fc_out, 'in1')
 
-btes.add_conns(fc_pu, pu_sp, sp_bhe1, sp_bhe2, sp_bhe3, bhe1_mg, bhe2_mg,
-               bhe3_mg, mg_cons, cons_fc)
+# btes.add_conns(fc_pu, pu_sp, sp_bhe1, sp_bhe2, sp_bhe3, bhe1_mg, bhe2_mg,
+#                bhe3_mg, mg_cons, cons_fc)
+btes.add_conns(fc_pu, pu_sp, sp_bhe1, bhe1_mg, mg_cons, cons_fc)
 
 
 # %% paramerization
@@ -99,8 +100,8 @@ pu.set_attr(eta_s=0.90)
 
 # bhes
 bhe1.set_attr(D=2, L=0.1, ks=0.00001)
-bhe2.set_attr(D=2, L=0.1, ks=0.00001)
-bhe3.set_attr(D=2, L=0.1, ks=0.00001)
+# bhe2.set_attr(D=2, L=0.1, ks=0.00001)
+# bhe3.set_attr(D=2, L=0.1, ks=0.00001)
 
 # consumer
 cons.set_attr(D=2, L=0.1, ks=0.00001)
@@ -109,20 +110,20 @@ heat = bus('consumer heat demand')
 heat.add_comps({'c': cons, 'p': 'P'})
 btes.add_busses(heat)
 # consumer heat demand
-heat.set_attr(P=-3000)  # W
+heat.set_attr(P=1056)  # W
 
 
 ## connection parametrization
 # system inlet
 inflow_head = 2  # bar
 
-fc_pu.set_attr(p=inflow_head, m=0.6, fluid={'water': 1})
+fc_pu.set_attr(p=inflow_head, m=0.2, fluid={'water': 1})
 
 # for BHEs:
 # Tout:
 bhe1_mg.set_attr(T=303.15)
-bhe2_mg.set_attr(T=303.15)
-bhe3_mg.set_attr(T=303.15)
+# bhe2_mg.set_attr(T=303.15)
+# bhe3_mg.set_attr(T=303.15)
 
 # imposed boundary condition: ensure all heat from BHEs are consumed on 'consumer'
 pu_sp.set_attr(h=ref(cons_fc, 1, 0))

@@ -19,15 +19,15 @@ import base_module.geometry as geometry
 
 #%% User setting
 #soil
-T0 = 273.15 + 12 + 30 #K soil initial temperature
+T0 = 273.15 + 22.1 #K soil initial temperature
 rho_s = 1120 #kg/m3
 c_s = 1780 #J/kg*K
-k_s = 2.4 #W/m*K
-alpha = k_s/(rho_s*c_s) #m^2/s
+k_s = 2.82 #W/m*K
+alpha = k_s/(3.2e6) #m^2/s
 
 #time
-time_tot = 90*24*60*60 #s
-delta_t = 86400 #s
+time_tot = 100*60*60 #s
+delta_t = 720 #s
 timestep_tot = int(time_tot/delta_t)
 
 #End User setting

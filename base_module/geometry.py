@@ -9,7 +9,7 @@ from pandas import read_csv
 #%% User setting
 #input geometry of the model
 
-bhe_num = 3 #BHE number
+bhe_num = 1 #BHE number
 BHE_wall_points_num = 4 #4 reference points on each BHE wall
 br = 0.063 # borehole raduis in m
 

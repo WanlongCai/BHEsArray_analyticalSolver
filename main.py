@@ -15,16 +15,16 @@ import post
 
 #%% User setting
 #main parameters
-time_tot = 90*24*60*60 #s
-delta_t = 86400 #s
+time_tot = 100*60*60 #s
+delta_t = 720 #s
 timestep_tot = int(time_tot/delta_t)
 
 #BHE
-BHE_num = 3
-BHE_length = 50 #m
+BHE_num = 1
+BHE_length = 18.2 #m
 #initial flowrate in each BHE, the global BHE flowrate curve is defined 
 #in bcs_tespy.py or tespy model
-BHE_f_r_ini = 0.2 #kg/s 
+BHE_f_r_ini = 0.2 #L/s
 
 # End User setting
 #%%initialize
